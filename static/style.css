@@ -25,3 +25,16 @@
 .metrics article strong{font-size:clamp(22px,2.2vw,30px);overflow-wrap:anywhere}
 @media(max-width:1050px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.metrics{grid-template-columns:1fr}}
+
+
+/* PayPilot Sandbox payments */
+#payments{margin:0 0 35px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:21px}
+.payment-intro{color:#c4cedb;line-height:1.6;margin:14px 0}
+#paymentForm{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+#paymentForm input:first-child{flex:2;min-width:190px}
+#paymentForm input:nth-child(2){flex:1;min-width:130px}
+#paymentButton:disabled{opacity:.65;cursor:wait}
+.status-note{font-size:12px;color:#f1c477;min-height:18px}
+.disclaimer{display:block;color:var(--muted);margin-top:13px;line-height:1.5}
+#payments code{font-size:10px;overflow-wrap:anywhere}
+@media(max-width:700px){#paymentForm{flex-direction:column}#paymentForm input{width:100%}}
