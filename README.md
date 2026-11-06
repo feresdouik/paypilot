@@ -1,89 +1,99 @@
 # PayPilot
 
-**An AI-powered payment operations assistant for small businesses.**
+**An AI-powered payment operations assistant for small businesses, with a PayPal Sandbox checkout prototype.**
 
-PayPilot is an early-stage prototype exploring how small businesses can organize payment records, understand payment status, and turn transaction data into clearer business decisions.
+PayPilot helps small businesses organize order records, test a PayPal checkout flow, review payment statuses, and explore AI-assisted business insights.
 
-> **Project status:** The current codebase is an adapted dashboard MVP. It currently manages demo order records and provides AI-assisted business analysis. PayPal API integration and real payment processing are **not implemented yet**.
+> **Project status:** The repository now includes a server-side PayPal Sandbox create-order and capture flow. It is a test integration only: use PayPal Sandbox accounts and credentials. No live payments are enabled.
 
-## The problem
+## Problem
 
-Small businesses often track orders and payment status across chats, spreadsheets, and manual notes. This makes it difficult to see what has been paid, what is still pending, and where follow-up is needed.
+Small businesses often track orders and payment status across chats, spreadsheets, and manual notes. This makes it difficult to see what is paid, what is pending, and where follow-up is needed.
 
-## The proposed solution
+## Current features
 
-PayPilot aims to bring payment visibility and AI-assisted insights into one simple workspace. The first development phase focuses on a clear transaction dashboard; later phases will explore a secure PayPal Sandbox integration.
+- Business dashboard with sample order metrics
+- Add order records and update their statuses
+- PayPal Sandbox checkout: create an order, redirect to PayPal approval, return, and capture the approved order
+- Store PayPal order IDs, capture IDs, amounts, timestamps, and statuses in SQLite
+- Payment history table in the dashboard
+- Server-side PayPal OAuth token exchange; client secrets never enter browser code
+- AI assistant can summarize order records and clearly distinguish Sandbox tests from real revenue
+- `/health` endpoint for deployment checks
 
-## Current prototype features
+## PayPal Sandbox setup
 
-- Dashboard summary based on sample order records
-- Add orders and update their statuses
-- Separate delivered amounts from pending/processing pipeline amounts
-- AI assistant that analyzes aggregated business figures
-- SQLite storage and a health-check endpoint
+1. Open the [PayPal Developer Dashboard](https://developer.paypal.com/dashboard/).
+2. Create or select a **Sandbox** REST app.
+3. Copy its Sandbox Client ID and Secret.
+4. Configure these environment variables on the server (for example, in Render):
+   - `PAYPAL_CLIENT_ID` — Sandbox app client ID
+   - `PAYPAL_CLIENT_SECRET` — Sandbox app secret
+5. Deploy the app over HTTPS and open the PayPal Sandbox section.
+6. Create a test payment. PayPilot redirects to PayPal Sandbox for approval; after approval, it returns to PayPilot and captures the order.
+7. Use a Sandbox personal test account as the payer. Do not use real payment credentials.
 
-## Planned development
-
-1. Rebrand and separate this project from BizPilot.
-2. Evolve order records into payment/transaction records with clear statuses.
-3. Add PayPal Developer Sandbox integration using server-side environment variables.
-4. Demonstrate payment creation and status verification in Sandbox, subject to the hackathon requirements.
-5. Improve validation, error handling, and deployment readiness.
-
-## Technology stack
-
-- **Backend:** Python, Flask, Gunicorn
-- **Database:** SQLite
-- **AI inference:** Groq API
-- **Frontend:** HTML, CSS, JavaScript
-- **Planned payment integration:** PayPal Developer APIs (not yet connected)
+The current checkout demo supports **USD** only. It uses PayPal's Sandbox API base URL and does not offer live payment processing.
 
 ## Run locally
 
 Requirements: Python 3.10 or newer.
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/feresdouik/paypilot.git
-   cd paypilot
-   ```
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. (Optional) Configure Groq for AI analysis:
-   - Set `GROQ_API_KEY` to your private API key.
-   - Set `GROQ_MODEL` to a model available to your account.
-4. Start the app:
-   ```bash
-   python app.py
-   ```
-5. Open http://localhost:5000.
+```bash
+git clone https://github.com/feresdouik/paypilot.git
+cd paypilot
+pip install -r requirements.txt
+python app.py
+```
 
-### Windows PowerShell
+Optional AI assistant configuration:
+
+- `GROQ_API_KEY`
+- `GROQ_MODEL`
+
+PayPal Sandbox configuration:
+
+- `PAYPAL_CLIENT_ID`
+- `PAYPAL_CLIENT_SECRET`
+
+On Windows PowerShell, set values in the current terminal session:
 
 ```powershell
+$env:PAYPAL_CLIENT_ID="your_sandbox_client_id"
+$env:PAYPAL_CLIENT_SECRET="your_sandbox_secret"
 $env:GROQ_API_KEY="your_groq_api_key"
 $env:GROQ_MODEL="your_available_groq_model"
 python app.py
 ```
 
-Never commit API keys or other secrets to GitHub. Use environment variables or the hosting provider's secret settings.
+Never commit API keys, client secrets, or other credentials to GitHub. Configure secrets as environment variables in your deployment platform.
 
 ## Deploy on Render
 
 - **Build command:** `pip install -r requirements.txt`
 - **Start command:** `gunicorn app:app`
-- Configure `GROQ_API_KEY` and `GROQ_MODEL` as environment variables if AI chat is required.
-- Verify the `/health` endpoint after deployment.
+- Add `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET` as secret environment variables using Sandbox credentials.
+- Add `GROQ_API_KEY` and `GROQ_MODEL` if AI chat is required.
+- Use HTTPS for the deployed checkout return URL.
+- Verify `/health` after deployment.
 
-## Important limitations
+## Technology stack
 
-- Demo records are fictional sample data, not real customer transactions.
-- The current prototype does not connect to PayPal, move money, charge customers, issue refunds, or verify real payments.
-- AI output is analysis only; it does not execute actions.
-- Current sample amounts are displayed as USD.
-- SQLite is suitable for this prototype; production deployment should use persistent managed storage and stronger operational safeguards.
+- Python, Flask, Gunicorn
+- SQLite
+- PayPal REST API (Sandbox)
+- Groq API for optional AI analysis
+- HTML, CSS, JavaScript
+
+## Important limitations and safety
+
+- Sandbox transactions are simulated tests, not real customer payments or revenue.
+- Live PayPal processing is not implemented or enabled.
+- Sample order records are fictional demo data.
+- The current prototype supports USD only.
+- AI provides analysis; it does not execute payments or change transaction records.
+- SQLite is suitable for this prototype. A production service needs persistent managed storage, authentication, access controls, monitoring, and additional payment lifecycle safeguards.
+- Never expose the PayPal client secret in frontend code or commit it to the repository.
 
 ## Team
 
