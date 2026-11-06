@@ -90,7 +90,10 @@ $("#orderform").onsubmit = async (event) => {
   });
   const data = await response.json();
   if (!response.ok) return alert(data.error || "Could not save order.");
-  event.target.reset(); event.target.hidden = true; 
+  event.target.reset(); event.target.hidden = true;
+  await load();
+};
+
 async function loadPayments() {
   const body = $("#paymentRows");
   try {
@@ -160,11 +163,8 @@ async function handlePayPalReturn() {
   }
 }
 
-load();
 loadPayments();
 handlePayPalReturn();
-
-};
 
 $("#orderRows").onclick = async (event) => {
   const button = event.target.closest("button[data-save-id]");
