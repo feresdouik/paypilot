@@ -77,6 +77,15 @@ Never commit API keys, client secrets, or other credentials to GitHub. Configure
 - Use HTTPS for the deployed checkout return URL.
 - Verify `/health` after deployment.
 
+
+## Suggested hackathon demo (about 90 seconds)
+
+1. **Introduce the problem:** Small businesses need one place to review orders and payment status instead of checking scattered records.
+2. **Show the overview:** Explain that the dashboard metrics and order rows are fictional sample data used to demonstrate the workflow.
+3. **Run the checkout:** Create a small USD Sandbox order, approve it with a PayPal Sandbox personal test account, and show the resulting `COMPLETED` payment in the history table.
+4. **Ask the AI assistant:** Try: `Summarize the business activity and explain the latest Sandbox payment.`
+5. **Close with scope:** PayPilot demonstrates a working Sandbox checkout and AI-assisted summaries. It does not process live payments, and the AI assistant does not execute transactions.
+
 ## Technology stack
 
 - Python, Flask, Gunicorn
