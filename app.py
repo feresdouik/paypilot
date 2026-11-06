@@ -8,7 +8,7 @@ from flask import Flask, request, jsonify, render_template
 from groq import Groq
 
 app = Flask(__name__)
-DB = os.getenv("DATABASE_PATH", "bizpilot.db")
+DB = os.getenv("DATABASE_PATH", "paypilot.db")
 
 
 def conn():
@@ -32,7 +32,7 @@ def home():
 
 @app.get("/health")
 def health():
-    return jsonify(status="ok", app="BizPilot AI")
+    return jsonify(status="ok", app="PayPilot")
 
 
 def get_orders():
@@ -113,7 +113,7 @@ def chat():
         return jsonify(reply="AI is not connected yet. Add GROQ_API_KEY to the deployment environment. Your dashboard and order manager work without it.")
     model = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
     system_prompt = (
-        "You are BizPilot AI, a careful business analyst for small businesses. Use only the supplied business snapshot. "
+        "You are PayPilot, a careful payment and small-business operations analyst. Use only the supplied business snapshot. "
         "All order amounts are denominated in US dollars (USD). Always label monetary figures as USD or $. "
         "delivered_revenue includes ONLY Delivered orders. pipeline_value is Pending plus Processing orders and is NOT earned revenue. "
         "Cancelled orders are excluded from revenue and pipeline. Never add pipeline value to delivered revenue. "
