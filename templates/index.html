@@ -1,1 +1,62 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PayPilot</title><link rel="stylesheet" href="/static/style.css?v=5"></head><body><aside><h2>◈ PayPilot <small>AI PAYMENT ASSISTANT</small></h2><p>WORKSPACE</p><a href="#overview">▦ Overview</a><a href="#orders">▤ Orders</a><a href="#assistant">✳ AI Assistant</a><footer>NexoraForge AI · Prototype v1</footer></aside><main><header><div><small>PAYMENTS, CLEARLY IN CONTROL</small><h1>Good day. <em>Let's grow.</em></h1><p>Your payment workspace and intelligent assistant.</p></div><b class="avatar">NF</b></header><section id="overview"><h2>Overview</h2><div class="metrics"><article><small>DELIVERED REVENUE · USD</small><strong id="revenue">—</strong></article><article><small>TOTAL ORDERS</small><strong id="count">—</strong></article><article><small>NEEDS ATTENTION</small><strong id="pending">—</strong></article><article><small>DELIVERED ORDERS</small><strong id="deliveredOrders">—</strong></article><article><small>PIPELINE VALUE · USD</small><strong id="pipelineValue">—</strong></article><article><small>CANCELLED ORDERS</small><strong id="cancelledOrders">—</strong></article><article><small>AVG. DELIVERED ORDER · USD</small><strong id="averageOrderValue">—</strong></article></div></section><section id="orders"><div class="bar"><div><h2>Recent transactions</h2><p>Track order and payment status</p></div><button id="toggle">＋ Add order</button></div><form id="orderform" hidden><input name="customer" placeholder="Customer" required><input name="product" placeholder="Product" required><input name="amount" type="number" min=".01" step=".01" placeholder="Amount (USD)" required><button>Save order</button></form><div class="tablewrap"><table><thead><tr><th>CUSTOMER</th><th>PRODUCT</th><th>AMOUNT (USD)</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="orderRows"></tbody></table></div></section><section id="assistant"><h2>✳ Ask PayPilot anything.</h2><p>Understand payment records and get practical business insights.</p><div id="messages"><div class="bubble">Hi! I can summarize orders, analyze your business snapshot and suggest next steps. What would you like to know?</div></div><form id="chat"><input id="question" placeholder="Ask about your business…" required><button>Send ↗</button></form><small>AI responses can make mistakes. Verify important decisions.</small></section><footer>PayPilot · Built by NexoraForge AI · Independent prototype</footer></main><script src="/static/app.js?v=5"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PayPilot</title>
+  <link rel="stylesheet" href="/static/style.css?v=6">
+</head>
+<body>
+  <aside>
+    <h2>◈ PayPilot <small>AI PAYMENT ASSISTANT</small></h2>
+    <p>WORKSPACE</p>
+    <a href="#overview">▦ Overview</a>
+    <a href="#payments">▣ PayPal Sandbox</a>
+    <a href="#orders">▤ Orders</a>
+    <a href="#assistant">✳ AI Assistant</a>
+    <footer>NexoraForge AI · Prototype v2</footer>
+  </aside>
+  <main>
+    <header><div><small>PAYMENTS, CLEARLY IN CONTROL</small><h1>Good day. <em>Let's grow.</em></h1><p>Your payment workspace and intelligent assistant.</p></div><b class="avatar">NF</b></header>
+    <section id="overview">
+      <h2>Business overview</h2>
+      <div class="metrics">
+        <article><small>DELIVERED REVENUE · USD</small><strong id="revenue">—</strong></article>
+        <article><small>TOTAL ORDERS</small><strong id="count">—</strong></article>
+        <article><small>NEEDS ATTENTION</small><strong id="pending">—</strong></article>
+        <article><small>DELIVERED ORDERS</small><strong id="deliveredOrders">—</strong></article>
+        <article><small>PIPELINE VALUE · USD</small><strong id="pipelineValue">—</strong></article>
+        <article><small>CANCELLED ORDERS</small><strong id="cancelledOrders">—</strong></article>
+        <article><small>AVG. DELIVERED ORDER · USD</small><strong id="averageOrderValue">—</strong></article>
+      </div>
+    </section>
+    <section id="payments">
+      <div class="bar"><div><h2>PayPal Sandbox checkout</h2><p>Test a payment flow without moving real money.</p></div><span class="tag">SANDBOX</span></div>
+      <div class="payment-intro">Create a test order, approve it in PayPal's Sandbox, then return here to capture it and record the result.</div>
+      <form id="paymentForm">
+        <input name="description" placeholder="Payment description" value="PayPilot demo purchase" maxlength="120" required>
+        <input name="amount" type="number" min="1" max="10000" step="0.01" placeholder="Amount (USD)" required>
+        <button id="paymentButton">Create PayPal test payment ↗</button>
+      </form>
+      <p id="paypalStatus" class="status-note">Sandbox credentials are required on the server. No credentials are stored in the browser.</p>
+      <div class="tablewrap">
+        <table><thead><tr><th>DESCRIPTION</th><th>AMOUNT</th><th>PAYPAL ORDER ID</th><th>STATUS</th><th>CREATED</th></tr></thead><tbody id="paymentRows"><tr><td colspan="5">Loading payments…</td></tr></tbody></table>
+      </div>
+      <small class="disclaimer">Sandbox transactions are simulated test payments. They are not real customer payments or revenue.</small>
+    </section>
+    <section id="orders">
+      <div class="bar"><div><h2>Order records</h2><p>Sample business data from the original dashboard module.</p></div><button id="toggle">＋ Add order</button></div>
+      <form id="orderform" hidden><input name="customer" placeholder="Customer" required><input name="product" placeholder="Product" required><input name="amount" type="number" min=".01" step=".01" placeholder="Amount (USD)" required><button>Save order</button></form>
+      <div class="tablewrap"><table><thead><tr><th>CUSTOMER</th><th>PRODUCT</th><th>AMOUNT (USD)</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="orderRows"></tbody></table></div>
+    </section>
+    <section id="assistant">
+      <h2>✳ Ask PayPilot anything.</h2><p>Analyze order records and PayPal Sandbox test activity.</p>
+      <div id="messages"><div class="bubble">Hi! I can summarize order records and Sandbox payment activity. What would you like to know?</div></div>
+      <form id="chat"><input id="question" placeholder="Ask about your business or test payments…" required><button>Send ↗</button></form>
+      <small>AI responses can make mistakes. Verify important decisions.</small>
+    </section>
+    <footer>PayPilot · Built by NexoraForge AI · Independent prototype</footer>
+  </main>
+  <script src="/static/app.js?v=6"></script>
+</body>
+</html>
