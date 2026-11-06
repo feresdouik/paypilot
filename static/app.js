@@ -90,7 +90,80 @@ $("#orderform").onsubmit = async (event) => {
   });
   const data = await response.json();
   if (!response.ok) return alert(data.error || "Could not save order.");
-  event.target.reset(); event.target.hidden = true; load();
+  event.target.reset(); event.target.hidden = true; 
+async function loadPayments() {
+  const body = $("#paymentRows");
+  try {
+    const response = await fetch("/api/payments");
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Could not load payments.");
+    $("#paypalStatus").textContent = data.configured
+      ? "PayPal Sandbox credentials detected. You can create test payments."
+      : "PayPal Sandbox is not configured yet. Add PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET to Render environment variables.";
+    body.innerHTML = data.payments.length ? data.payments.map((p) =>
+      "<tr><td>" + esc(p.description) + "</td><td>" + money(p.amount) +
+      "</td><td><code>" + esc(p.paypal_order_id) + "</code></td><td><span class='tag'>" +
+      esc(p.status) + "</span></td><td>" + esc(new Date(p.created_at + "Z").toLocaleString()) + "</td></tr>"
+    ).join("") : "<tr><td colspan='5'>No Sandbox payments yet. Create your first test payment above.</td></tr>";
+  } catch (error) {
+    body.innerHTML = "<tr><td colspan='5'>" + esc(error.message) + "</td></tr>";
+  }
+}
+
+$("#paymentForm").onsubmit = async (event) => {
+  event.preventDefault();
+  const button = $("#paymentButton");
+  const status = $("#paypalStatus");
+  button.disabled = true;
+  button.textContent = "Connecting to PayPal…";
+  status.textContent = "Creating a Sandbox order securely on the server…";
+  try {
+    const payload = Object.fromEntries(new FormData(event.target));
+    const response = await fetch("/api/paypal/create-order", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Could not create payment.");
+    window.location.href = data.approval_url;
+  } catch (error) {
+    status.textContent = error.message;
+    button.disabled = false;
+    button.textContent = "Create PayPal test payment ↗";
+  }
+};
+
+async function handlePayPalReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
+  if (params.get("paypal") === "cancel") {
+    $("#paypalStatus").textContent = "You cancelled the Sandbox checkout. No payment was captured.";
+    history.replaceState({}, "", "/");
+    return;
+  }
+  if (params.get("paypal") !== "return" || !token) return;
+  $("#paypalStatus").textContent = "PayPal approval received. Capturing the Sandbox payment…";
+  try {
+    const response = await fetch("/api/paypal/capture-order", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order_id: token })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Capture failed.");
+    $("#paypalStatus").textContent = data.status === "COMPLETED"
+      ? "Sandbox payment completed successfully. Capture ID: " + (data.capture_id || "recorded")
+      : "PayPal returned status: " + data.status + ". Check the payment record.";
+    history.replaceState({}, "", "/");
+    await loadPayments();
+  } catch (error) {
+    $("#paypalStatus").textContent = "Could not capture payment: " + error.message;
+  }
+}
+
+load();
+loadPayments();
+handlePayPalReturn();
+
 };
 
 $("#orderRows").onclick = async (event) => {
